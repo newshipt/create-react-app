@@ -27,7 +27,7 @@
     "test-sg1-react-scripts": "./bin/test-sg1-react-scripts.js"
   },
   "scripts": {
-    "test": "npx create-react-app test-module --scripts-version file:../react-scripts --use-npm --typescript"
+    "test": "npx create-react-app test-module --scripts-version file:../react-scripts --use-npm"
   },
   "types": "./lib/react-app.d.ts",
   "dependencies": {

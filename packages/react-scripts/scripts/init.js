@@ -98,7 +98,6 @@ module.exports = function(
     start: 'test-sg1-react-scripts start',
     build: 'test-sg1-react-scripts build',
     test: 'test-sg1-react-scripts test',
-    eject: 'test-sg1-react-scripts eject',
   };
 
   // Setup the eslint config
@@ -125,7 +124,7 @@ module.exports = function(
   // Copy the files for the user
   const templatePath = template
     ? path.resolve(originalDirectory, template)
-    : path.join(ownPath, useTypeScript ? 'template-typescript' : 'template');
+    : path.join(ownPath, 'template-typescript');
   if (fs.existsSync(templatePath)) {
     fs.copySync(templatePath, appPath);
   } else {
@@ -232,16 +231,16 @@ module.exports = function(
   console.log(chalk.cyan(`  ${displayedCommand} test`));
   console.log('    Starts the test runner.');
   console.log();
-  console.log(
-    chalk.cyan(`  ${displayedCommand} ${useYarn ? '' : 'run '}eject`)
-  );
-  console.log(
-    '    Removes this tool and copies build dependencies, configuration files'
-  );
-  console.log(
-    '    and scripts into the app directory. If you do this, you can’t go back!'
-  );
-  console.log();
+  // console.log(
+  //   chalk.cyan(`  ${displayedCommand} ${useYarn ? '' : 'run '}eject`)
+  // );
+  // console.log(
+  //   '    Removes this tool and copies build dependencies, configuration files'
+  // );
+  // console.log(
+  //   '    and scripts into the app directory. If you do this, you can’t go back!'
+  // );
+  // console.log();
   console.log('We suggest that you begin by typing:');
   console.log();
   console.log(chalk.cyan('  cd'), cdpath);

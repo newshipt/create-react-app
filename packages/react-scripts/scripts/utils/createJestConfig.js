@@ -125,13 +125,13 @@ module.exports = (resolve, rootDir, isEjecting) => {
               'are not currently supported by Create React App:\n\n' +
               unsupportedKeys
                 .map(key => chalk.bold('  \u2022 ' + key))
-                .join('\n') +
-              '\n\nIf you wish to override other Jest options, you need to ' +
-              'eject from the default setup. You can do so by running ' +
-              chalk.bold('npm run eject') +
-              ' but remember that this is a one-way operation. ' +
-              'You may also file an issue with Create React App to discuss ' +
-              'supporting more options out of the box.\n'
+                .join('\n')
+              // '\n\nIf you wish to override other Jest options, you need to ' +
+              // 'eject from the default setup. You can do so by running ' +
+              // chalk.bold('npm run eject') +
+              // ' but remember that this is a one-way operation. ' +
+              // 'You may also file an issue with Create React App to discuss ' +
+              // 'supporting more options out of the box.\n'
           )
         );
       }

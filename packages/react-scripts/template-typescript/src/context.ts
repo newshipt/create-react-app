@@ -1,14 +1,10 @@
-import { ModuleExporter } from '@shipt/nova/framework/services/module-exporter'
-import { ISG1ModuleContext } from '@shipt/nova/framework/interfaces/sg1-module-context'
-import { IMenuItem } from '@shipt/nova/framework/interfaces/sg1-menu-item'
-import { ISG1Route } from '@shipt/nova/framework/interfaces/sg1-route'
-// TODO: refactor @shipt/nova to simplify import statements without affecting this dependency tree
+import { ContextExporter, ISG1ModuleContext, IMenuItem, ISG1Route } from '@shipt/nova/context'
 
-const moduleId = require('../package.json').name
+const id = require('../package.json').name
 
 export class Context implements ISG1ModuleContext {
-  id = moduleId
-  get Menu(): IMenuItem[] {
+  static ID = id
+  static get Menu(): IMenuItem[] {
     let routes: ISG1Route[] = [];
 
     let sampleHomeRoute = {
@@ -45,4 +41,4 @@ export class Context implements ISG1ModuleContext {
   }
 }
 
-ModuleExporter.context(new Context())
+ContextExporter.export(Context)

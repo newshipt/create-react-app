@@ -1,6 +1,6 @@
 import SampleDefault from './components/sample/SampleDefault'
 import SampleEdit from './components/sample/SampleEdit'
-import { ModuleExporter } from '@shipt/nova'
+import { ModuleExporter } from '@shipt/nova/module'
 
-ModuleExporter.component(SampleDefault)
-ModuleExporter.component(SampleEdit)
+ModuleExporter.export(SampleDefault)
+ModuleExporter.export(SampleEdit)

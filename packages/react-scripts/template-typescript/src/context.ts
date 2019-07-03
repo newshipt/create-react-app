@@ -41,4 +41,4 @@ export class Context implements ISG1ModuleContext {
   }
 }
 
-ContextExporter.export(Context)
+ContextExporter.export(new Context())

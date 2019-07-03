@@ -1,6 +1,6 @@
 {
   "name": "sg1-module",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "Configuration and scripts for SG1 module.",
   "repository": {
     "type": "git",
@@ -27,7 +27,7 @@
     "sg1-module": "./bin/sg1-module.js"
   },
   "scripts": {
-    "test": "npx create-react-app test-module --scripts-version file:../react-scripts --use-npm"
+    "test": "npx create-react-app test-module --scripts-version file:../react-scripts --typescript"
   },
   "types": "./lib/react-app.d.ts",
   "dependencies": {
@@ -86,8 +86,7 @@
   },
   "devDependencies": {
     "react": "^16.8.4",
-    "react-dom": "^16.8.4",
-    "typescript": "^3.5.2"
+    "react-dom": "^16.8.4"
   },
   "optionalDependencies": {
     "fsevents": "2.0.7"

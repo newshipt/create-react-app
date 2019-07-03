@@ -3,8 +3,8 @@ import { ContextExporter, ISG1ModuleContext, IMenuItem, ISG1Route } from '@shipt
 const id = require('../package.json').name
 
 export class Context implements ISG1ModuleContext {
-  static ID = id
-  static get Menu(): IMenuItem[] {
+  ID = id
+  get Menu(): IMenuItem[] {
     let routes: ISG1Route[] = [];
 
     let sampleHomeRoute = {

@@ -1,6 +1,6 @@
 {
-  "name": "test-sg1-react-scripts",
-  "version": "3.0.1-next.2",
+  "name": "sg1-module",
+  "version": "3.0.1",
   "description": "Configuration and scripts for SG1 module.",
   "repository": {
     "type": "git",
@@ -24,7 +24,7 @@
     "utils"
   ],
   "bin": {
-    "test-sg1-react-scripts": "./bin/test-sg1-react-scripts.js"
+    "sg1-module": "./bin/sg1-module.js"
   },
   "scripts": {
     "test": "npx create-react-app test-module --scripts-version file:../react-scripts --use-npm"

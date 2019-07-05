@@ -163,7 +163,7 @@ module.exports = function(
     command = 'npm';
     args = ['install', '--save', verbose && '--verbose'].filter(e => e);
   }
-  args.push('react', 'react-dom');
+  // args.push('react', 'react-dom');
 
   // Install additional template dependencies, if present
   const templateDependenciesPath = path.join(
@@ -171,20 +171,34 @@ module.exports = function(
     '.template.dependencies.json'
   );
   if (fs.existsSync(templateDependenciesPath)) {
+    let deps = []
     const templateDependencies = require(templateDependenciesPath).dependencies;
     args = args.concat(
       Object.keys(templateDependencies).map(key => {
+        deps.push(key)
         return `${key}@${templateDependencies[key]}`;
       })
     );
     fs.unlinkSync(templateDependenciesPath);
-  }
 
-  // Install react and react-dom for backward compatibility with old CRA cli
-  // which doesn't install react and react-dom along with react-scripts
-  // or template is presetend (via --internal-testing-template)
-  if (!isReactInstalled(appPackage) || template) {
-    console.log(`Installing react and react-dom using ${command}...`);
+    const depString = () => {
+      let str = ""
+      for (let i in deps) {
+        str += chalk.cyan(deps[i])
+        if (i === deps.length - 1) {
+          str + ', '
+        }
+        else if (i === deps.length - 2) {
+          str + ', and '
+        }
+      }
+      return str
+    }
+
+    // Install additional module dependencies from .template.dependencies.json
+    console.log();
+    console.log(`Installing additional module dependencies.`);
+    console.log(`Installing ${depString()}...`);
     console.log();
 
     const proc = spawn.sync(command, args, { stdio: 'inherit' });
@@ -193,7 +207,7 @@ module.exports = function(
       return;
     }
   }
-
+  
   if (useTypeScript) {
     verifyTypeScriptSetup();
   }

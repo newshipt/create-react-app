@@ -196,16 +196,16 @@ module.exports = function(
     }
 
     // Install additional module dependencies from .template.dependencies.json
-    console.log();
-    console.log(`Installing additional module dependencies.`);
-    console.log(`Installing ${depString()}...`);
-    console.log();
+    // console.log();
+    // console.log(`Installing additional module dependencies.`);
+    // console.log(`Installing ${depString()}...`);
+    // console.log();
 
-    const proc = spawn.sync(command, args, { stdio: 'inherit' });
-    if (proc.status !== 0) {
-      console.error(`\`${command} ${args.join(' ')}\` failed`);
-      return;
-    }
+    // const proc = spawn.sync(command, args, { stdio: 'inherit' });
+    // if (proc.status !== 0) {
+    //   console.error(`\`${command} ${args.join(' ')}\` failed`);
+    //   return;
+    // }
   }
   
   if (useTypeScript) {

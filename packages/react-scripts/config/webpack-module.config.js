@@ -52,7 +52,7 @@ const sassModuleRegex = /\.module\.(scss|sass)$/;
 
 // This is the production and development configuration.
 // It is focused on developer experience, fast rebuilds, and a minimal bundle.
-module.exports = function(webpackEnv, moduleId) {
+module.exports = function(webpackEnv, moduleId, port) {
   const isEnvDevelopment = webpackEnv === 'development';
   const isEnvProduction = webpackEnv === 'production';
 
@@ -68,7 +68,21 @@ module.exports = function(webpackEnv, moduleId) {
         }
     }
     return JSON.stringify(output, null, 2)
-}
+  }
+
+  // configure entry points
+  let context = paths.appContext
+  let module = paths.appModule
+
+  // add live reloading with webpack dev server
+  if (isEnvDevelopment) {
+    const liveReloading = [
+      'webpack-dev-server/client?http://0.0.0.0:' + port,
+      'webpack/hot/only-dev-server'
+    ]
+    context = liveReloading.concat([context])
+    module = liveReloading.concat([module])
+  }
 
   // Webpack uses `publicPath` to determine where the app is being served from.
   // It requires a trailing slash, or the file assets will get an incorrect path.
@@ -534,7 +548,7 @@ module.exports = function(webpackEnv, moduleId) {
       // Otherwise React will be compiled in the very slow development mode.
       new webpack.DefinePlugin(env.stringified),
       // This is necessary to emit hot updates (currently CSS only):
-      isEnvDevelopment && new webpack.HotModuleReplacementPlugin(),
+      // isEnvDevelopment && new webpack.HotModuleReplacementPlugin(),
       // Watcher doesn't work well if you mistype casing in a path so we use
       // a plugin that prints an error when you attempt to do this.
       // See https://github.com/facebook/create-react-app/issues/240

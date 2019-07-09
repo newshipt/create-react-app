@@ -92,7 +92,7 @@ checkBrowsers(paths.appPath, isInteractive)
       return;
     }
     const appName = require(paths.appPackageJson).name;
-    const config = configFactory('development', appName);
+    const config = configFactory('development', appName, port);
     const protocol = process.env.HTTPS === 'true' ? 'https' : 'http';
     const useTypeScript = fs.existsSync(paths.appTsConfig);
     const urls = prepareUrls(protocol, HOST, port);
@@ -143,7 +143,7 @@ checkBrowsers(paths.appPath, isInteractive)
       }
 
       console.log(chalk.cyan('Starting the development server...\n'));
-      openBrowser(urls.localUrlForBrowser);
+      // openBrowser(urls.localUrlForBrowser);
     });
 
     ['SIGINT', 'SIGTERM'].forEach(function(sig) {

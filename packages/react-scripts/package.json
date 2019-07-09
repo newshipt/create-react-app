@@ -1,7 +1,7 @@
 {
-  "name": "sg1-module",
-  "version": "3.0.8",
-  "description": "Configuration and scripts for SG1 module.",
+  "name": "@shipt/sg1-scripts",
+  "version": "3.0.9",
+  "description": "Custom react-scripts for building sg1 modules.",
   "repository": {
     "type": "git",
     "url": "https://github.com/newshipt/create-react-app.git",
@@ -24,7 +24,7 @@
     "utils"
   ],
   "bin": {
-    "sg1-module": "./bin/sg1-module.js"
+    "sg1-scripts": "./bin/sg1-scripts.js"
   },
   "scripts": {
     "test": "npx create-react-app test-module --scripts-version file:../react-scripts --typescript"

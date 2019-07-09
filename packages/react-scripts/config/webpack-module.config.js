@@ -165,9 +165,9 @@ module.exports = function(webpackEnv, moduleId, port) {
     // This means they will be the "root" imports that are included in JS bundle.
     entry: {
       // This loads the SG1 context separately from all other module code:
-      context: paths.appContext,
+      context,
       // Finally, this is your app's code:
-      module: paths.appModule,
+      module,
       // We include the app code last so that if there is a runtime error during
       // initialization, it doesn't blow up the WebpackDevServer client, and
       // changing JS code would still trigger a refresh.
@@ -548,7 +548,7 @@ module.exports = function(webpackEnv, moduleId, port) {
       // Otherwise React will be compiled in the very slow development mode.
       new webpack.DefinePlugin(env.stringified),
       // This is necessary to emit hot updates (currently CSS only):
-      // isEnvDevelopment && new webpack.HotModuleReplacementPlugin(),
+      isEnvDevelopment && new webpack.HotModuleReplacementPlugin(),
       // Watcher doesn't work well if you mistype casing in a path so we use
       // a plugin that prints an error when you attempt to do this.
       // See https://github.com/facebook/create-react-app/issues/240

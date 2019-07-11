@@ -11,6 +11,6 @@ describe('sample/SampleEdit', () => {
   })
 
   it('should render without errors', () => {
-    expect(shallow(<SampleEdit />).contains('Edit')).toBe(true)
+    expect(shallow(<SampleEdit />).contains('Sample Edit')).toBe(true)
   })
 })

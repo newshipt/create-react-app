@@ -105,6 +105,28 @@ module.exports = function(
     extends: 'react-app',
   };
 
+  // Setup the jest config
+  appPackage.jest = {
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx,ts,tsx}",
+      "!<rootDir>/node_modules/"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 90,
+        "functions": 90,
+        "lines": 90,
+        "statements": 90
+      }
+    },
+    "coverageReporters": [
+      "text"
+    ],
+    "snapshotSerializers": [
+      "enzyme-to-json/serializer"
+    ]
+  };
+
   // Setup the browsers list
   appPackage.browserslist = defaultBrowsers;
 
@@ -181,24 +203,10 @@ module.exports = function(
     );
     fs.unlinkSync(templateDependenciesPath);
 
-    const depString = () => {
-      let str = ""
-      for (let i in deps) {
-        str += chalk.cyan(deps[i])
-        if (i === deps.length - 1) {
-          str + ', '
-        }
-        else if (i === deps.length - 2) {
-          str + ', and '
-        }
-      }
-      return str
-    }
-
     // Install additional module dependencies from .template.dependencies.json
     console.log();
     console.log(`Installing additional module dependencies.`);
-    console.log(`Installing ${depString()}...`);
+    console.log(`Installing ${deps.map(n => chalk.cyan(n)).join(', ')}...`);
     console.log();
 
     const proc = spawn.sync(command, args, { stdio: 'inherit' });

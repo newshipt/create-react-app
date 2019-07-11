@@ -1,5 +1,10 @@
 {
     "dependencies": {
-        "@shipt/nova": "latest"
+        "@shipt/nova": "latest",
+        "@types/enzyme": "latest",
+        "enzyme": "latest",
+        "enzyme-adapter-react-16": "latest",
+        "enzyme-to-json": "latest",
+        "ts-jest": "latest"
     }
 }

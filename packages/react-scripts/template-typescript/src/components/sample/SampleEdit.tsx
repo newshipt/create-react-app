@@ -6,12 +6,10 @@ export default class SampleEdit extends ComponentBase {
   render() {
     return (
       <div>
-        <h1>Edit</h1>
-        <div className="form">
-          <div className="form-group">
-            <label>Sample Name</label>
-            <input type="text" className="form-control" name="Sample" />
-          </div>
+        <h3>Sample Edit</h3>
+        <div>
+          <label>Sample Name</label>
+          <input type="text" name="Sample" />
         </div>
       </div>
     )

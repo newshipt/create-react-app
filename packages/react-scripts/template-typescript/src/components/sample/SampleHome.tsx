@@ -1,0 +1,48 @@
+import React from 'react'
+import { ComponentBase } from '@shipt/nova'
+
+const MudOwl = (props: any) => <img
+  alt="Mud Owl"
+  style={{ maxWidth: '500px'}}
+  src={"https://i.pinimg.com/originals/b2/df/6c/b2df6cb6ba1c2585dc3dd924012bf0cb.jpg"}
+  {...props}
+/>
+
+export default class SampleHome extends ComponentBase {
+  static id = 'SampleHome'
+
+  state = {
+    counter: 1,
+    mudOwls: [MudOwl]
+  }
+
+  constructor(props: any) {
+    super(props)
+    this.onClick = this.onClick.bind(this)
+  }
+
+  onClick() {
+    const mudOwls = this.state.mudOwls
+    mudOwls.push(MudOwl)
+    this.setState({
+      counter: this.state.counter + 1,
+      mudOwls
+    })
+  }
+
+  render() {
+    return (
+      <section>
+        <h3>Sample Home</h3>
+        <button onClick={this.onClick}>Count {this.state.counter}</button>
+        <br />
+        <br />
+        <div style={{ width: '100%', overflowY: 'scroll' }}>
+          {this.state.mudOwls.map((MudOwl, i) => (
+            <MudOwl key={i} />
+          ))}
+        </div>
+      </section>
+    )
+  }
+}

@@ -1,14 +1,19 @@
 import React from 'react'
-import { ComponentBase } from '@shipt/nova'
+import { ComponentBase, Link } from '@shipt/nova'
 
 const MudOwl = (props: any) => <img
   alt="Mud Owl"
-  style={{ maxWidth: '500px'}}
+  style={{ maxWidth: '500px' }}
   src={"https://i.pinimg.com/originals/b2/df/6c/b2df6cb6ba1c2585dc3dd924012bf0cb.jpg"}
   {...props}
 />
 
-export default class SampleHome extends ComponentBase {
+interface SampleProps {
+  history: any
+  location: any
+}
+
+export default class SampleHome extends ComponentBase<SampleProps> {
   static id = 'SampleHome'
 
   state = {
@@ -16,7 +21,7 @@ export default class SampleHome extends ComponentBase {
     mudOwls: [MudOwl]
   }
 
-  constructor(props: any) {
+  constructor(props: SampleProps) {
     super(props)
     this.onClick = this.onClick.bind(this)
   }
@@ -31,11 +36,13 @@ export default class SampleHome extends ComponentBase {
   }
 
   render() {
+    const { history, location } = this.props
     return (
       <section>
         <h3>Sample Home</h3>
         <button onClick={this.onClick}>Count {this.state.counter}</button>
         <br />
+        <Link to="/sample/edit" history={history} location={location}>Edit</Link>
         <br />
         <div style={{ width: '100%', overflowY: 'scroll' }}>
           {this.state.mudOwls.map((MudOwl, i) => (

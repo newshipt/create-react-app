@@ -1,6 +1,6 @@
 {
   "name": "@shipt/sg1-scripts",
-  "version": "3.0.14",
+  "version": "3.0.15",
   "description": "Custom react-scripts for building sg1 modules.",
   "repository": {
     "type": "git",
@@ -81,7 +81,7 @@
     "ts-pnp": "1.1.2",
     "url-loader": "1.1.2",
     "webpack": "4.29.6",
-    "webpack-dev-server": "3.7.2",
+    "webpack-dev-server": "3.2.1",
     "webpack-manifest-plugin": "2.0.4"
   },
   "devDependencies": {

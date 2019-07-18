@@ -33,6 +33,7 @@ const typescriptFormatter = require('react-dev-utils/typescriptFormatter');
 const getCacheIdentifier = require('react-dev-utils/getCacheIdentifier');
 // @remove-on-eject-end
 const postcssNormalize = require('postcss-normalize');
+const { Externals } = require('share-loader')
 
 // Source maps are resource heavy and can cause out of memory issue for large source files.
 const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
@@ -52,9 +53,12 @@ const sassModuleRegex = /\.module\.(scss|sass)$/;
 
 // This is the production and development configuration.
 // It is focused on developer experience, fast rebuilds, and a minimal bundle.
-module.exports = function(webpackEnv, moduleId, port) {
+module.exports = function(webpackEnv, appPackage, port) {
   const isEnvDevelopment = webpackEnv === 'development';
   const isEnvProduction = webpackEnv === 'production';
+  const moduleId = appPackage.name
+  const sg1Config = appPackage.sg1Config
+  sg1Config.externals.modules = sg1Config.externals.modules.map(m => new RegExp(m))
 
   const manifest = manifest => {
     const output = {}
@@ -172,7 +176,12 @@ module.exports = function(webpackEnv, moduleId, port) {
       // initialization, it doesn't blow up the WebpackDevServer client, and
       // changing JS code would still trigger a refresh.
     },
+    externals: [
+      Externals(sg1Config.externals)
+    ],
     output: {
+      library: moduleId,
+      libraryTarget: 'umd',
       // The build folder.
       path: isEnvProduction ? paths.appBuild : undefined,
       // Add /* filename */ comments to generated require()s in the output.
@@ -345,6 +354,17 @@ module.exports = function(webpackEnv, moduleId, port) {
             },
           ],
           include: paths.appSrc,
+        },
+        {
+          test: /\.js?$/,
+          use: sg1Config.isRoot ? [{
+            loader: 'share-loader',
+            options: {
+              modules: sg1Config.externals.modules,
+              exclude: [],
+              namespace: sg1Config.externals.namespace
+            }
+          }] : []
         },
         {
           // "oneOf" will traverse all following loaders until one will

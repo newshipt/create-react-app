@@ -60,8 +60,8 @@ if (!checkRequiredFiles([paths.appModule])) {
 }
 
 // Generate configuration
-const appName = require(paths.appPackageJson).name;
-const config = configFactory('production', appName);
+const appPackage = require(paths.appPackageJson);
+const config = configFactory('production', appPackage);
 
 // We require that you explicitly set browsers and do not fall back to
 // browserslist defaults.

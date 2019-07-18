@@ -1,6 +1,6 @@
 {
   "name": "@shipt/sg1-scripts",
-  "version": "3.0.15",
+  "version": "3.0.16",
   "description": "Custom react-scripts for building sg1 modules.",
   "repository": {
     "type": "git",
@@ -75,6 +75,7 @@
     "resolve": "1.10.0",
     "sass-loader": "7.1.0",
     "semver": "6.0.0",
+    "share-loader": "^0.6.2",
     "source-map-loader": "^0.2.4",
     "style-loader": "0.23.1",
     "terser-webpack-plugin": "1.2.3",

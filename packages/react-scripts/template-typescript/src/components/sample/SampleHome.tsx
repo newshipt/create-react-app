@@ -1,5 +1,6 @@
 import React from 'react'
-import { ComponentBase, Link } from '@shipt/nova'
+import { Link } from 'react-router-dom'
+import { ComponentBase } from '@shipt/nova'
 
 const MudOwl = (props: any) => <img
   alt="Mud Owl"
@@ -42,7 +43,7 @@ export default class SampleHome extends ComponentBase<SampleProps> {
         <h3>Sample Home</h3>
         <button onClick={this.onClick}>Count {this.state.counter}</button>
         <br />
-        <Link to="/sample/edit" history={history} location={location}>Edit</Link>
+        <Link to="/sample/edit">Edit</Link>
         <br />
         <div style={{ width: '100%', overflowY: 'scroll' }}>
           {this.state.mudOwls.map((MudOwl, i) => (

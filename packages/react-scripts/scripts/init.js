@@ -130,6 +130,14 @@ module.exports = function(
   // Setup the browsers list
   appPackage.browserslist = defaultBrowsers;
 
+  // Setup sg1 config
+  appPackage.sg1Config = {
+    externals: {
+      namespace: "sg1",
+      modules: ["react", "react-dom", "react-router-dom"]
+    }
+  }
+
   fs.writeFileSync(
     path.join(appPath, 'package.json'),
     JSON.stringify(appPackage, null, 2) + os.EOL

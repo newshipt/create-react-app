@@ -1,0 +1,11 @@
+{
+    "dependencies": {
+        "@shipt/nova": "latest",
+        "@types/enzyme": "latest",
+        "@types/react-router-dom": "latest",
+        "enzyme": "latest",
+        "enzyme-adapter-react-16": "latest",
+        "enzyme-to-json": "latest",
+        "react-router-dom": "latest"
+    }
+}

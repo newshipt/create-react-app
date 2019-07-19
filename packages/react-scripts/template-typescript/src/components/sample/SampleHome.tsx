@@ -37,7 +37,6 @@ export default class SampleHome extends ComponentBase<SampleProps> {
   }
 
   render() {
-    const { history, location } = this.props
     return (
       <section>
         <h3>Sample Home</h3>

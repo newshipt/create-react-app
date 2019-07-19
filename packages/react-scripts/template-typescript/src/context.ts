@@ -1,4 +1,4 @@
-import { ContextExporter, ISG1ModuleContext, IMenuSection, ISG1Route } from '@shipt/nova/context'
+import { ContextExporter, ISG1ModuleContext, IMenuSection, ISG1Route } from '@shipt/nova'
 
 const id = require('../package.json').name
 

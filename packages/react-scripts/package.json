@@ -1,6 +1,6 @@
 {
   "name": "@shipt/sg1-module-scripts",
-  "version": "3.0.17",
+  "version": "3.0.1",
   "description": "Custom react-scripts for building sg1 modules.",
   "repository": {
     "type": "git",

@@ -57,8 +57,31 @@ module.exports = function(webpackEnv, appPackage, port) {
   const isEnvDevelopment = webpackEnv === 'development';
   const isEnvProduction = webpackEnv === 'production';
   const moduleId = appPackage.name
-  const sg1Config = appPackage.sg1Config
-  sg1Config.externals.modules = sg1Config.externals.modules.map(m => new RegExp(m))
+  let sg1Config
+  if (appPackage.sg1Config) {
+    sg1Config = appPackage.sg1Config
+    if (!appPackage.sg1Config.externals || !appPackage.sg1Config.externals.namespace || !appPackage.sg1Config.externals.modules) {
+      console.error('sg1 config is missing valid externals declaration!')
+      console.error('Expected the following format:', JSON.stringify({
+        externals: {
+          namespace: "string",
+          modules: ["package regex"]
+        }
+      }, null, 2))
+    }
+    sg1Config.externals.modules = sg1Config.externals.modules.map(m => new RegExp(m))
+  }
+  // {
+  //   test: /\.js?$/,
+  //   use: sg1Config.isRoot ? [{
+  //     loader: 'share-loader',
+  //     options: {
+  //       modules: sg1Config.externals.modules,
+  //       exclude: [],
+  //       namespace: sg1Config.externals.namespace
+  //     }
+  //   }] : []
+  // },
 
   const manifest = manifest => {
     const output = {}
@@ -176,9 +199,9 @@ module.exports = function(webpackEnv, appPackage, port) {
       // initialization, it doesn't blow up the WebpackDevServer client, and
       // changing JS code would still trigger a refresh.
     },
-    externals: [
+    externals: sg1Config && sg1Config.externals ? [
       Externals(sg1Config.externals)
-    ],
+    ] : [],
     output: {
       library: moduleId,
       libraryTarget: 'umd',
@@ -354,17 +377,6 @@ module.exports = function(webpackEnv, appPackage, port) {
             },
           ],
           include: paths.appSrc,
-        },
-        {
-          test: /\.js?$/,
-          use: sg1Config.isRoot ? [{
-            loader: 'share-loader',
-            options: {
-              modules: sg1Config.externals.modules,
-              exclude: [],
-              namespace: sg1Config.externals.namespace
-            }
-          }] : []
         },
         {
           // "oneOf" will traverse all following loaders until one will

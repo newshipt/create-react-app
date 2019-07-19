@@ -5,7 +5,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/newshipt/create-react-app.git",
-    "directory": "packages/sg1-module-scripts"
+    "directory": "packages/react-scripts"
   },
   "license": "MIT",
   "engines": {
@@ -27,7 +27,7 @@
     "sg1-module-scripts": "./bin/sg1-module-scripts.js"
   },
   "scripts": {
-    "test": "npx create-react-app test-module --scripts-version file:../sg1-module-scripts --typescript"
+    "test": "npx create-react-app test-module --scripts-version file:../react-scripts --typescript"
   },
   "types": "./lib/react-app.d.ts",
   "dependencies": {

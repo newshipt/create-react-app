@@ -29,6 +29,7 @@ const getClientEnvironment = require('./env');
 const ModuleNotFoundPlugin = require('react-dev-utils/ModuleNotFoundPlugin');
 const ForkTsCheckerWebpackPlugin = require('react-dev-utils/ForkTsCheckerWebpackPlugin');
 const typescriptFormatter = require('react-dev-utils/typescriptFormatter');
+const eslint = require('eslint');
 // @remove-on-eject-begin
 const getCacheIdentifier = require('react-dev-utils/getCacheIdentifier');
 // @remove-on-eject-end
@@ -240,7 +241,7 @@ module.exports = function(webpackEnv, appPackage, port) {
           terserOptions: {
             parse: {
               // we want terser to parse ecma 8 code. However, we don't want it
-              // to apply any minfication steps that turns valid ecma 5 code
+              // to apply any minification steps that turns valid ecma 5 code
               // into invalid ecma 5 code. This is why the 'compress' and 'output'
               // sections only apply transformations that are ecma 5 safe
               // https://github.com/facebook/create-react-app/pull/4234
@@ -256,7 +257,7 @@ module.exports = function(webpackEnv, appPackage, port) {
               comparisons: false,
               // Disabled because of an issue with Terser breaking valid code:
               // https://github.com/facebook/create-react-app/issues/5250
-              // Pending futher investigation:
+              // Pending further investigation:
               // https://github.com/terser-js/terser/issues/120
               inline: 2,
             },
@@ -366,9 +367,30 @@ module.exports = function(webpackEnv, appPackage, port) {
                 formatter: require.resolve('react-dev-utils/eslintFormatter'),
                 eslintPath: require.resolve('eslint'),
                 // @remove-on-eject-begin
-                baseConfig: {
-                  extends: [require.resolve('eslint-config-react-app')],
-                },
+                baseConfig: (() => {
+                  const eslintCli = new eslint.CLIEngine();
+                  let eslintConfig;
+                  try {
+                    eslintConfig = eslintCli.getConfigForFile(paths.appContext);
+                  } catch (e) {
+                    // A config couldn't be found.
+                  }
+
+                  // We allow overriding the config, only if it extends our config
+                  // (`extends` can be a string or array of strings).
+                  if (
+                    process.env.EXTEND_ESLINT &&
+                    eslintConfig &&
+                    eslintConfig.extends &&
+                    eslintConfig.extends.includes('react-app')
+                  ) {
+                    return eslintConfig;
+                  } else {
+                    return {
+                      extends: [require.resolve('eslint-config-react-app')],
+                    };
+                  }
+                })(),
                 ignore: false,
                 useEslintrc: false,
                 // @remove-on-eject-end
@@ -431,7 +453,8 @@ module.exports = function(webpackEnv, appPackage, port) {
                     {
                       loaderMap: {
                         svg: {
-                          ReactComponent: '@svgr/webpack?-svgo,+ref![path]',
+                          ReactComponent:
+                            '@svgr/webpack?-svgo,+titleProp,+ref![path]',
                         },
                       },
                     },

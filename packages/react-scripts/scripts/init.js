@@ -107,24 +107,20 @@ module.exports = function(
 
   // Setup the jest config
   appPackage.jest = {
-    "collectCoverageFrom": [
-      "src/**/*.{js,jsx,ts,tsx}",
-      "!<rootDir>/node_modules/"
+    collectCoverageFrom: [
+      'src/**/*.{js,jsx,ts,tsx}',
+      '!<rootDir>/node_modules/',
     ],
-    "coverageThreshold": {
-      "global": {
-        "branches": 90,
-        "functions": 90,
-        "lines": 90,
-        "statements": 90
-      }
+    coverageThreshold: {
+      global: {
+        branches: 90,
+        functions: 90,
+        lines: 90,
+        statements: 90,
+      },
     },
-    "coverageReporters": [
-      "text"
-    ],
-    "snapshotSerializers": [
-      "enzyme-to-json/serializer"
-    ]
+    coverageReporters: ['text'],
+    snapshotSerializers: ['enzyme-to-json/serializer'],
   };
 
   // Setup the browsers list
@@ -133,10 +129,10 @@ module.exports = function(
   // Setup sg1 config
   appPackage.sg1Config = {
     externals: {
-      namespace: "sg1",
-      modules: ["react", "react-dom", "react-router-dom", "@shipt/nova"]
-    }
-  }
+      namespace: 'sg1',
+      modules: ['@shipt/nova', '^react$', '^react-dom$', '^react-router-dom$'],
+    },
+  };
 
   fs.writeFileSync(
     path.join(appPath, 'package.json'),
@@ -201,11 +197,11 @@ module.exports = function(
     '.template.dependencies.json'
   );
   if (fs.existsSync(templateDependenciesPath)) {
-    let deps = []
+    let deps = [];
     const templateDependencies = require(templateDependenciesPath).dependencies;
     args = args.concat(
       Object.keys(templateDependencies).map(key => {
-        deps.push(key)
+        deps.push(key);
         return `${key}@${templateDependencies[key]}`;
       })
     );
@@ -223,7 +219,7 @@ module.exports = function(
       return;
     }
   }
-  
+
   if (useTypeScript) {
     verifyTypeScriptSetup();
   }

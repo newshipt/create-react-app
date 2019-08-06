@@ -1,6 +1,5 @@
-import React from 'react'
+import React, { useState, useCallback } from 'react'
 import { Link } from 'react-router-dom'
-import { ComponentBase } from '@shipt/nova'
 
 const MudOwl = (props: any) => <img
   alt="Mud Owl"
@@ -9,47 +8,31 @@ const MudOwl = (props: any) => <img
   {...props}
 />
 
-interface SampleProps {
-  history: any
-  location: any
+const SampleHome: React.FC = () => {
+
+  const [mudOwls, setMudOwls] = useState<typeof MudOwl[]>([])
+
+  const addMudOwl = useCallback(() => {
+    setMudOwls([
+      ...mudOwls,
+      MudOwl
+    ])
+  }, [mudOwls, setMudOwls])
+
+  return (
+    <section>
+      <h3>Sample Home</h3>
+      <button onClick={addMudOwl}>Count {mudOwls.length}</button>
+      <br />
+      <Link to="/sample/edit">Edit</Link>
+      <br />
+      <div style={{ width: '100%', overflowY: 'scroll' }}>
+        {mudOwls.map((MudOwl, i) => (
+          <MudOwl key={i} />
+        ))}
+      </div>
+    </section>
+  )
 }
 
-export default class SampleHome extends ComponentBase<SampleProps> {
-  static id = 'SampleHome'
-
-  state = {
-    counter: 1,
-    mudOwls: [MudOwl]
-  }
-
-  constructor(props: SampleProps) {
-    super(props)
-    this.onClick = this.onClick.bind(this)
-  }
-
-  onClick() {
-    const mudOwls = this.state.mudOwls
-    mudOwls.push(MudOwl)
-    this.setState({
-      counter: this.state.counter + 1,
-      mudOwls
-    })
-  }
-
-  render() {
-    return (
-      <section>
-        <h3>Sample Home</h3>
-        <button onClick={this.onClick}>Count {this.state.counter}</button>
-        <br />
-        <Link to="/sample/edit">Edit</Link>
-        <br />
-        <div style={{ width: '100%', overflowY: 'scroll' }}>
-          {this.state.mudOwls.map((MudOwl, i) => (
-            <MudOwl key={i} />
-          ))}
-        </div>
-      </section>
-    )
-  }
-}
+export default SampleHome

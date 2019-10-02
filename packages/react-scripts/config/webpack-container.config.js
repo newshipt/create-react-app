@@ -38,7 +38,6 @@ const eslint = require('eslint');
 const getCacheIdentifier = require('react-dev-utils/getCacheIdentifier');
 // @remove-on-eject-end
 const postcssNormalize = require('postcss-normalize');
-const { Externals } = require('share-loader')
 
 // Source maps are resource heavy and can cause out of memory issue for large source files.
 const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
@@ -64,19 +63,32 @@ const sassModuleRegex = /\.module\.(scss|sass)$/;
 module.exports = function(webpackEnv, appPackage) {
   const isEnvDevelopment = webpackEnv === 'development';
   const isEnvProduction = webpackEnv === 'production';
-  let sg1Config
+  let sg1Config;
   if (appPackage.sg1Config) {
-    sg1Config = appPackage.sg1Config
-    if (!appPackage.sg1Config.externals || !appPackage.sg1Config.externals.namespace || !appPackage.sg1Config.externals.modules) {
-      console.error('sg1 config is missing valid externals declaration!')
-      console.error('Expected the following format:', JSON.stringify({
-        externals: {
-          namespace: "string",
-          modules: ["package regex"]
-        }
-      }, null, 2))
+    sg1Config = appPackage.sg1Config;
+    if (
+      !appPackage.sg1Config.externals ||
+      !appPackage.sg1Config.externals.namespace ||
+      !appPackage.sg1Config.externals.modules
+    ) {
+      console.error('sg1 config is missing valid externals declaration!');
+      console.error(
+        'Expected the following format:',
+        JSON.stringify(
+          {
+            externals: {
+              namespace: 'string',
+              modules: ['package regex'],
+            },
+          },
+          null,
+          2
+        )
+      );
     }
-    sg1Config.externals.modules = sg1Config.externals.modules.map(m => new RegExp(m))
+    sg1Config.externals.modules = sg1Config.externals.modules.map(
+      m => new RegExp(m)
+    );
   }
 
   // Webpack uses `publicPath` to determine where the app is being served from.
@@ -137,12 +149,20 @@ module.exports = function(webpackEnv, appPackage) {
       },
     ].filter(Boolean);
     if (preProcessor) {
-      loaders.push({
-        loader: require.resolve(preProcessor),
-        options: {
-          sourceMap: isEnvProduction && shouldUseSourceMap,
+      loaders.push(
+        {
+          loader: require.resolve('resolve-url-loader'),
+          options: {
+            sourceMap: isEnvProduction && shouldUseSourceMap,
+          },
         },
-      });
+        {
+          loader: require.resolve(preProcessor),
+          options: {
+            sourceMap: true,
+          },
+        }
+      );
     }
     return loaders;
   };
@@ -204,6 +224,9 @@ module.exports = function(webpackEnv, appPackage) {
               .replace(/\\/g, '/')
         : isEnvDevelopment &&
           (info => path.resolve(info.absoluteResourcePath).replace(/\\/g, '/')),
+      // Prevents conflicts when multiple Webpack runtimes (from different apps)
+      // are used on the same page.
+      jsonpFunction: `webpackJsonp${appPackage.name}`,
     },
     optimization: {
       minimize: isEnvProduction,
@@ -212,7 +235,7 @@ module.exports = function(webpackEnv, appPackage) {
         new TerserPlugin({
           terserOptions: {
             parse: {
-              // we want terser to parse ecma 8 code. However, we don't want it
+              // We want terser to parse ecma 8 code. However, we don't want it
               // to apply any minification steps that turns valid ecma 5 code
               // into invalid ecma 5 code. This is why the 'compress' and 'output'
               // sections only apply transformations that are ecma 5 safe
@@ -279,7 +302,10 @@ module.exports = function(webpackEnv, appPackage) {
       },
       // Keep the runtime chunk separated to enable long term caching
       // https://twitter.com/wSokra/status/969679223278505985
-      runtimeChunk: true,
+      // https://github.com/facebook/create-react-app/issues/5358
+      runtimeChunk: {
+        name: entrypoint => `runtime-${entrypoint.name}`,
+      },
     },
     resolve: {
       // This allows you to set a fallback for where Webpack should look for modules.
@@ -336,6 +362,7 @@ module.exports = function(webpackEnv, appPackage) {
           use: [
             {
               options: {
+                cache: true,
                 formatter: require.resolve('react-dev-utils/eslintFormatter'),
                 eslintPath: require.resolve('eslint'),
                 resolvePluginsRelativeTo: __dirname,
@@ -349,14 +376,8 @@ module.exports = function(webpackEnv, appPackage) {
                     // A config couldn't be found.
                   }
 
-                  // We allow overriding the config, only if it extends our config
-                  // (`extends` can be a string or array of strings).
-                  if (
-                    process.env.EXTEND_ESLINT &&
-                    eslintConfig &&
-                    eslintConfig.extends &&
-                    eslintConfig.extends.includes('react-app')
-                  ) {
+                  // We allow overriding the config only if the env variable is set
+                  if (process.env.EXTEND_ESLINT === 'true' && eslintConfig) {
                     return eslintConfig;
                   } else {
                     return {
@@ -375,14 +396,18 @@ module.exports = function(webpackEnv, appPackage) {
         },
         {
           test: /\.js?$/,
-          use: sg1Config.isRoot ? [{
-            loader: 'share-loader',
-            options: {
-              modules: sg1Config.externals.modules,
-              exclude: [],
-              namespace: sg1Config.externals.namespace
-            }
-          }] : []
+          use: sg1Config.isRoot
+            ? [
+                {
+                  loader: 'share-loader',
+                  options: {
+                    modules: sg1Config.externals.modules,
+                    exclude: [],
+                    namespace: sg1Config.externals.namespace,
+                  },
+                },
+              ]
+            : [],
         },
         {
           // "oneOf" will traverse all following loaders until one will
@@ -448,7 +473,8 @@ module.exports = function(webpackEnv, appPackage) {
                 // It enables caching results in ./node_modules/.cache/babel-loader/
                 // directory for faster rebuilds.
                 cacheDirectory: true,
-                cacheCompression: isEnvProduction,
+                // See #6846 for context on why cacheCompression is disabled
+                cacheCompression: false,
                 compact: isEnvProduction,
               },
             },
@@ -469,7 +495,8 @@ module.exports = function(webpackEnv, appPackage) {
                   ],
                 ],
                 cacheDirectory: true,
-                cacheCompression: isEnvProduction,
+                // See #6846 for context on why cacheCompression is disabled
+                cacheCompression: false,
                 // @remove-on-eject-begin
                 cacheIdentifier: getCacheIdentifier(
                   isEnvProduction
@@ -605,9 +632,10 @@ module.exports = function(webpackEnv, appPackage) {
       ),
       // Inlines the webpack runtime script. This script is too small to warrant
       // a network request.
+      // https://github.com/facebook/create-react-app/issues/5358
       isEnvProduction &&
         shouldInlineRuntimeChunk &&
-        new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/runtime~.+[.]js/]),
+        new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/runtime-.+[.]js/]),
       // Makes some environment variables available in index.html.
       // The public URL is available as %PUBLIC_URL% in index.html, e.g.:
       // <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
@@ -677,9 +705,11 @@ module.exports = function(webpackEnv, appPackage) {
           navigateFallbackBlacklist: [
             // Exclude URLs starting with /_, as they're likely an API call
             new RegExp('^/_'),
-            // Exclude URLs containing a dot, as they're likely a resource in
-            // public/ and not a SPA route
-            new RegExp('/[^/]+\\.[^/]+$'),
+            // Exclude any URLs whose last part seems to be a file extension
+            // as they're likely a resource and not a SPA route.
+            // URLs containing a "?" character won't be blacklisted as they're likely
+            // a route with query params (e.g. auth callbacks).
+            new RegExp('/[^/?]+\\.[^/]+$'),
           ],
         }),
       // TypeScript type checking
@@ -705,7 +735,6 @@ module.exports = function(webpackEnv, appPackage) {
             '!**/src/setupProxy.*',
             '!**/src/setupTests.*',
           ],
-          watch: paths.appSrc,
           silent: true,
           // The formatter is invoked directly in WebpackDevServerUtils during development
           formatter: isEnvProduction ? typescriptFormatter : undefined,

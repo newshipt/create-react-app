@@ -38,7 +38,6 @@ const eslint = require('eslint');
 const getCacheIdentifier = require('react-dev-utils/getCacheIdentifier');
 // @remove-on-eject-end
 const postcssNormalize = require('postcss-normalize');
-const { Externals } = require('share-loader')
 
 // Source maps are resource heavy and can cause out of memory issue for large source files.
 const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
@@ -64,19 +63,32 @@ const sassModuleRegex = /\.module\.(scss|sass)$/;
 module.exports = function(webpackEnv, appPackage) {
   const isEnvDevelopment = webpackEnv === 'development';
   const isEnvProduction = webpackEnv === 'production';
-  let sg1Config
+  let sg1Config;
   if (appPackage.sg1Config) {
-    sg1Config = appPackage.sg1Config
-    if (!appPackage.sg1Config.externals || !appPackage.sg1Config.externals.namespace || !appPackage.sg1Config.externals.modules) {
-      console.error('sg1 config is missing valid externals declaration!')
-      console.error('Expected the following format:', JSON.stringify({
-        externals: {
-          namespace: "string",
-          modules: ["package regex"]
-        }
-      }, null, 2))
+    sg1Config = appPackage.sg1Config;
+    if (
+      !appPackage.sg1Config.externals ||
+      !appPackage.sg1Config.externals.namespace ||
+      !appPackage.sg1Config.externals.modules
+    ) {
+      console.error('sg1 config is missing valid externals declaration!');
+      console.error(
+        'Expected the following format:',
+        JSON.stringify(
+          {
+            externals: {
+              namespace: 'string',
+              modules: ['package regex'],
+            },
+          },
+          null,
+          2
+        )
+      );
     }
-    sg1Config.externals.modules = sg1Config.externals.modules.map(m => new RegExp(m))
+    sg1Config.externals.modules = sg1Config.externals.modules.map(
+      m => new RegExp(m)
+    );
   }
 
   // Webpack uses `publicPath` to determine where the app is being served from.
@@ -375,14 +387,18 @@ module.exports = function(webpackEnv, appPackage) {
         },
         {
           test: /\.js?$/,
-          use: sg1Config.isRoot ? [{
-            loader: 'share-loader',
-            options: {
-              modules: sg1Config.externals.modules,
-              exclude: [],
-              namespace: sg1Config.externals.namespace
-            }
-          }] : []
+          use: sg1Config.isRoot
+            ? [
+                {
+                  loader: 'sg1-loader',
+                  options: {
+                    modules: sg1Config.externals.modules,
+                    exclude: [],
+                    namespace: sg1Config.externals.namespace,
+                  },
+                },
+              ]
+            : [],
         },
         {
           // "oneOf" will traverse all following loaders until one will

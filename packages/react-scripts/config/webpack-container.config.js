@@ -399,7 +399,7 @@ module.exports = function(webpackEnv, appPackage) {
           use: sg1Config.isRoot
             ? [
                 {
-                  loader: 'share-loader',
+                  loader: 'sg1-loader',
                   options: {
                     modules: sg1Config.externals.modules,
                     exclude: [],

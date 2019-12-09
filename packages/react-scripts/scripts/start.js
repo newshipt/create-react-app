@@ -92,10 +92,11 @@ checkBrowsers(paths.appPath, isInteractive)
       return;
     }
     const appPackage = require(paths.appPackageJson);
-    const appName = appPackage.name
+    const appName = appPackage.name;
     const config = configFactory('development', appPackage, port);
     const protocol = process.env.HTTPS === 'true' ? 'https' : 'http';
     const useTypeScript = fs.existsSync(paths.appTsConfig);
+    const tscCompileOnError = process.env.TSC_COMPILE_ON_ERROR === 'true';
     const urls = prepareUrls(protocol, HOST, port);
     const devSocket = {
       warnings: warnings =>
@@ -111,6 +112,7 @@ checkBrowsers(paths.appPath, isInteractive)
       urls,
       useYarn,
       useTypeScript,
+      tscCompileOnError,
       webpack,
     });
     // Load proxy config

@@ -149,6 +149,29 @@ module.exports = function(
     extends: 'react-app',
   };
 
+  // Setup the prettier config
+  appPackage.prettier = {
+    parser: '@typescript-eslint/parser', // Specifies the ESLint parser
+    extends: ['prettier', 'react-app'],
+    plugins: ['prettier'],
+    parserOptions: {
+      ecmaVersion: 2019, // Allows for the parsing of modern ECMAScript features
+      sourceType: 'module', // Allows for the use of imports
+    },
+    rules: {
+      'prettier/prettier': 'error',
+    },
+  };
+
+  // Setup the jest config
+  appPackage.jest = {
+    collectCoverageFrom: [
+      'src/**/*.{js,jsx,ts,tsx}',
+      '!<rootDir>/node_modules/',
+    ],
+    coverageReporters: ['text'],
+  };
+
   // Setup the browsers list
   appPackage.browserslist = defaultBrowsers;
 

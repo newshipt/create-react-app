@@ -118,6 +118,9 @@ module.exports = function(
     templateJson = require(templateJsonPath);
   }
 
+  // Copy over some of the devDependencies
+  appPackage.dependencies = appPackage.dependencies || {};
+
   // Setup the script rules
   appPackage.scripts = {};
   const templateScripts = templateJson.scripts || {};
@@ -141,16 +144,8 @@ module.exports = function(
     );
   }
 
-  // Copy over some of the devDependencies
-  appPackage.dependencies = appPackage.dependencies || {};
-
   // Setup the eslint config
   appPackage.eslintConfig = {
-    extends: 'react-app',
-  };
-
-  // Setup the prettier config
-  appPackage.prettier = {
     parser: '@typescript-eslint/parser', // Specifies the ESLint parser
     extends: ['prettier', 'react-app'],
     plugins: ['prettier'],
@@ -161,6 +156,14 @@ module.exports = function(
     rules: {
       'prettier/prettier': 'error',
     },
+  };
+
+  // Setup the prettier config
+  appPackage.prettier = {
+    semi: false,
+    singleQuote: true,
+    tabWidth: 2,
+    trailingComma: 'all',
   };
 
   // Setup the jest config
@@ -266,16 +269,6 @@ module.exports = function(
     args = args.concat(
       Object.keys(templateDependencies).map(key => {
         return `${key}@${templateDependencies[key]}`;
-      })
-    );
-  }
-
-  // Install additional template devDependencies, if present
-  const templateDevDependencies = templateJson.devDependencies;
-  if (templateDevDependencies) {
-    args = args.concat(
-      Object.keys(templateDevDependencies).map(key => {
-        return `${key}@${templateDevDependencies[key]}`;
       })
     );
   }

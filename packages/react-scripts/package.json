@@ -1,6 +1,6 @@
 {
   "name": "@shipt/sg1-module-scripts",
-  "version": "3.3.1-1",
+  "version": "3.3.1",
   "description": "Custom react-scripts for building sg1 modules.",
   "repository": {
     "type": "git",
@@ -27,7 +27,7 @@
     "sg1-module-scripts": "./bin/sg1-module-scripts.js"
   },
   "scripts": {
-    "test": "npx create-react-app test-module --scripts-version file:../react-scripts --template @shipt/cra-template-sg1-module --use-npm"
+    "test": "npx create-react-app test-module --scripts-version file:../react-scripts --template @shipt/cra-template-sg1-module@next --use-npm"
   },
   "types": "./lib/react-app.d.ts",
   "dependencies": {

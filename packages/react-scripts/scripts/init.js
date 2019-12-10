@@ -174,7 +174,13 @@ module.exports = function(
   appPackage.sg1Config = {
     externals: {
       namespace: 'sg1',
-      modules: ['@shipt/nova', '^react$', '^react-dom$', '^react-router-dom$'],
+      modules: [
+        '@shipt/nova',
+        '^react$',
+        '^react-dom$',
+        '^react-router-dom$',
+        '^styled-components$',
+      ],
     },
   };
 

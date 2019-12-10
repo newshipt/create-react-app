@@ -1,13 +1,13 @@
 {
-  "name": "sg1-module-template",
-  "version": "1.0.0",
+  "name": "@shipt/cra-template-sg1-module",
+  "version": "1.0.0-0",
   "keywords": [
     "react",
     "create-react-app",
     "template",
     "typescript"
   ],
-  "description": "The base TypeScript template for Create React App.",
+  "description": "The base template for SG1 modules.",
   "main": "template.json",
   "repository": {
     "type": "git",

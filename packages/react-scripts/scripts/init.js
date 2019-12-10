@@ -130,9 +130,6 @@ module.exports = function(
     templateScripts
   );
 
-  // Copy over some of the devDependencies
-  appPackage.dependencies = appPackage.dependencies || {};
-
   // Update scripts for Yarn users
   if (useYarn) {
     appPackage.scripts = Object.entries(appPackage.scripts).reduce(
@@ -144,26 +141,12 @@ module.exports = function(
     );
   }
 
+  // Copy over some of the devDependencies
+  appPackage.dependencies = appPackage.dependencies || {};
+
   // Setup the eslint config
   appPackage.eslintConfig = {
     extends: 'react-app',
-  };
-
-  // Setup the jest config
-  appPackage.jest = {
-    collectCoverageFrom: [
-      'src/**/*.{js,jsx,ts,tsx}',
-      '!<rootDir>/node_modules/',
-    ],
-    coverageThreshold: {
-      global: {
-        branches: 90,
-        functions: 90,
-        lines: 90,
-        statements: 90,
-      },
-    },
-    coverageReporters: ['text'],
   };
 
   // Setup the browsers list

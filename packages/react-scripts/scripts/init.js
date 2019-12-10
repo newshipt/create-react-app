@@ -118,9 +118,6 @@ module.exports = function(
     templateJson = require(templateJsonPath);
   }
 
-  // Copy over some of the devDependencies
-  appPackage.dependencies = appPackage.dependencies || {};
-
   // Setup the script rules
   appPackage.scripts = {};
   const templateScripts = templateJson.scripts || {};
@@ -132,6 +129,9 @@ module.exports = function(
     },
     templateScripts
   );
+
+  // Copy over some of the devDependencies
+  appPackage.dependencies = appPackage.dependencies || {};
 
   // Update scripts for Yarn users
   if (useYarn) {
@@ -164,7 +164,6 @@ module.exports = function(
       },
     },
     coverageReporters: ['text'],
-    snapshotSerializers: ['enzyme-to-json/serializer'],
   };
 
   // Setup the browsers list
@@ -261,6 +260,16 @@ module.exports = function(
     args = args.concat(
       Object.keys(templateDependencies).map(key => {
         return `${key}@${templateDependencies[key]}`;
+      })
+    );
+  }
+
+  // Install additional template devDependencies, if present
+  const templateDevDependencies = templateJson.devDependencies;
+  if (templateDevDependencies) {
+    args = args.concat(
+      Object.keys(templateDevDependencies).map(key => {
+        return `${key}@${templateDevDependencies[key]}`;
       })
     );
   }

@@ -43,7 +43,7 @@ const {
   prepareProxy,
   prepareUrls,
 } = require('react-dev-utils/WebpackDevServerUtils');
-const openBrowser = require('react-dev-utils/openBrowser');
+// const openBrowser = require('react-dev-utils/openBrowser');
 const paths = require('../config/paths');
 const configFactory = require('../config/webpack-module.config');
 const createDevServerConfig = require('../config/webpackDevServer.config');
@@ -93,7 +93,7 @@ checkBrowsers(paths.appPath, isInteractive)
     }
     const appPackage = require(paths.appPackageJson);
     const appName = appPackage.name;
-    const config = configFactory('development', appPackage, port);
+    const config = configFactory('development', appPackage);
     const protocol = process.env.HTTPS === 'true' ? 'https' : 'http';
     const useTypeScript = fs.existsSync(paths.appTsConfig);
     const tscCompileOnError = process.env.TSC_COMPILE_ON_ERROR === 'true';

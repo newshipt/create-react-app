@@ -1,7 +1,7 @@
 {
   "name": "@shipt/sg1-module-scripts",
-  "version": "3.3.1-0",
-  "description": "Custom react-scripts for building sg1 modules.",
+  "version": "3.3.0-3",
+  "description": "Custom react-scripts for building SG1 modules with Create React App.",
   "repository": {
     "type": "git",
     "url": "https://github.com/shipt/create-react-app.git",

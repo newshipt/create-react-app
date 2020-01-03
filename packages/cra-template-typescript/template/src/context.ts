@@ -1,34 +1,35 @@
-import { ContextExporter, ISG1ModuleContext, IMenuSection, ISG1Route } from '@shipt/nova'
-
-const id = require('../package.json').name
+import {
+  ContextExporter,
+  ISG1ModuleContext,
+  IMenuSection,
+  ISG1Route,
+} from '@shipt/nova'
+import { name } from '../package.json'
 
 export class Context implements ISG1ModuleContext {
-  ID = id
+  ID = name
 
-  // Routes accessible from SG1 menu
+  // Routes accessible from menu
   get Menu(): IMenuSection[] {
-    return [{
-      sort: 0,
-      name: 'Sample Mud Owl',
-      items: [{
+    return [
+      {
         sort: 0,
-        name: 'Sample Home',
-        route: {
-          path: '/sample',
-          component: 'SampleHome'
-        }
-      }, {
-        sort: 1,
-        name: 'Sample Edit',
-        route: {
-          path: '/sample/edit',
-          component: 'SampleEdit'
-        }
-      }]
-    }]
+        name: 'Modules',
+        items: [
+          {
+            sort: 0,
+            name: 'Module Component',
+            route: {
+              path: '/module',
+              component: 'ModuleComponent',
+            },
+          },
+        ],
+      },
+    ]
   }
 
-  // Routes accessible from components
+  // Routes accessible from components, but not in menu
   get SubRoutes(): ISG1Route[] {
     return []
   }

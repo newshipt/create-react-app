@@ -1,5 +1,5 @@
 {
-  "name": "cra-template-typescript",
+  "name": "@shipt/cra-template-sg1",
   "version": "1.0.0",
   "keywords": [
     "react",
@@ -7,11 +7,11 @@
     "template",
     "typescript"
   ],
-  "description": "The base TypeScript template for Create React App.",
+  "description": "The SG1 app template for Create React App.",
   "main": "template.json",
   "repository": {
     "type": "git",
-    "url": "https://github.com/facebook/create-react-app.git",
+    "url": "https://github.com/shipt/create-react-app.git",
     "directory": "packages/cra-template-typescript"
   },
   "license": "MIT",
@@ -19,7 +19,7 @@
     "node": ">=8.10"
   },
   "bugs": {
-    "url": "https://github.com/facebook/create-react-app/issues"
+    "url": "https://github.com/shipt/create-react-app/issues"
   },
   "files": [
     "template",

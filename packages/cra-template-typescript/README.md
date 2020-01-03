@@ -1,17 +1,17 @@
-# cra-template-typescript
+# @shipt/cra-template-sg1
 
-This is the official TypeScript template for [Create React App](https://github.com/facebook/create-react-app).
+This is the official SG1 app template for [Create React App](https://github.com/shipt/create-react-app).
 
-To use this template, add `--template typescript` when creating a new app.
+To use this template, add `--template @shipt/sg1` when creating a new app.
 
 For example:
 
 ```sh
-npx create-react-app my-app --template typescript
+npx create-react-app my-app --template @shipt/sg1
 
 # or
 
-yarn create react-app my-app --template typescript
+yarn create react-app my-app --template @shipt/sg1
 ```
 
 For more information, please refer to:

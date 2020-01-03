@@ -125,10 +125,10 @@ module.exports = function(
   const templateScripts = templateJson.scripts || {};
   appPackage.scripts = Object.assign(
     {
-      start: 'react-scripts start',
-      build: 'react-scripts build',
-      test: 'react-scripts test',
-      eject: 'react-scripts eject',
+      start: 'sg1-scripts start',
+      build: 'sg1-scripts build',
+      test: 'sg1-scripts test',
+      'test:cov': 'npm run test -- --coverage --watchAll=false',
     },
     templateScripts
   );
@@ -144,9 +144,46 @@ module.exports = function(
     );
   }
 
+  // SG1 config
+  appPackage.sg1Config = {
+    isRoot: true,
+    externals: {
+      namespace: 'sg1',
+      modules: [
+        '@shipt/nova',
+        '^react$',
+        '^react-dom$',
+        '^react-router-dom$',
+        '^styled-components$',
+      ],
+    },
+  };
+
   // Setup the eslint config
   appPackage.eslintConfig = {
-    extends: 'react-app',
+    parser: '@typescript-eslint/parser', // Specifies the ESLint parser
+    extends: ['prettier', 'react-app'],
+    plugins: ['prettier'],
+    parserOptions: {
+      ecmaVersion: 2019, // Allows for the parsing of modern ECMAScript features
+      sourceType: 'module', // Allows for the use of imports
+    },
+    rules: {
+      'prettier/prettier': 'error',
+    },
+  };
+
+  // Setup the prettier config
+  appPackage.prettier = {
+    semi: false,
+    singleQuote: true,
+    tabWidth: 2,
+    trailingComma: 'all',
+  };
+
+  // Setup the jest config
+  appPackage.jest = {
+    collectCoverageFrom: ['!src/*.ts'],
   };
 
   // Setup the browsers list

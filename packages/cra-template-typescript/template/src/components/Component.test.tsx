@@ -4,5 +4,5 @@ import { Component } from './Component'
 
 it('renders without errors', () => {
   const component = render(<Component />)
-  expect(component.queryByTestId('title')).toBeDefined()
+  expect(component.queryByTestId('title')).toHaveTextContent('Hello SG1!')
 })

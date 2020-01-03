@@ -129,6 +129,7 @@ module.exports = function(
       start: 'sg1-module-scripts start',
       build: 'sg1-module-scripts build',
       test: 'sg1-module-scripts test',
+      'test:cov': 'npm run test --coverage --watchAll=false',
     },
     templateScripts
   );
@@ -164,15 +165,6 @@ module.exports = function(
     singleQuote: true,
     tabWidth: 2,
     trailingComma: 'all',
-  };
-
-  // Setup the jest config
-  appPackage.jest = {
-    collectCoverageFrom: [
-      'src/**/*.{js,jsx,ts,tsx}',
-      '!<rootDir>/node_modules/',
-    ],
-    coverageReporters: ['text'],
   };
 
   // Setup the browsers list

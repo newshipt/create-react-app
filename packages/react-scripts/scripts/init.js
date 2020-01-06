@@ -183,7 +183,7 @@ module.exports = function(
 
   // Setup the jest config
   appPackage.jest = {
-    collectCoverageFrom: ['!src/*.{ts|tsx}'],
+    collectCoverageFrom: ['!src/*.ts', 'src/**/{!(index),}.tsx'],
   };
 
   // Setup the browsers list

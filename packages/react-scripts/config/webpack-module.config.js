@@ -105,7 +105,10 @@ module.exports = function(webpackEnv, appPackage) {
 
   const manifest = manifest => {
     const output = {};
-    output[moduleId] = {};
+    output[moduleId] = {
+      version: appPackage.version,
+      timestamp: Date.now(),
+    };
     for (let file in manifest) {
       const key = file.replace('.js', '');
       if (isEnvProduction) {

@@ -1,18 +1,16 @@
 import React from 'react'
-import { ThemeProvider } from 'styled-components'
 import { defaultTheme } from '@shipt/nova'
-import { render as baseRender, RenderOptions } from '@testing-library/react'
-import '@testing-library/jest-dom/extend-expect'
+import { render, RenderOptions } from '@testing-library/react'
+import { MemoryRouter as Router } from 'react-router-dom'
+import { ThemeProvider } from 'styled-components'
 
-let BaseProviders: React.FC = ({ children }) => (
+const BaseProviders: React.FC = ({ children }) => (
   <ThemeProvider theme={defaultTheme}>
-    <>{children}</>
+    <Router>{children}</Router>
   </ThemeProvider>
 )
 
-export * from '@testing-library/react'
-
-export const render = (
+const customRender = (
   ui: React.ReactElement,
   options?: Omit<RenderOptions, 'queries'>,
 ) => {
@@ -25,5 +23,9 @@ export const render = (
       </BaseProviders>
     )
   }
-  return baseRender(ui, { ...options, wrapper })
+  return render(ui, { ...options, wrapper })
 }
+
+export * from '@testing-library/react'
+
+export { customRender as render }

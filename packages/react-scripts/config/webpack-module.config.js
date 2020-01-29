@@ -64,44 +64,35 @@ module.exports = function(webpackEnv, appPackage) {
   const isEnvDevelopment = webpackEnv === 'development';
   const isEnvProduction = webpackEnv === 'production';
   const moduleId = appPackage.name;
-  let sg1Config;
-  if (appPackage.sg1Config) {
-    sg1Config = appPackage.sg1Config;
-    if (
-      !appPackage.sg1Config.externals ||
-      !appPackage.sg1Config.externals.namespace ||
-      !appPackage.sg1Config.externals.modules
-    ) {
-      console.error('sg1 config is missing valid externals declaration!');
-      console.error(
-        'Expected the following format:',
-        JSON.stringify(
-          {
-            externals: {
-              namespace: 'string',
-              modules: ['package regex'],
-            },
-          },
-          null,
-          2
-        )
+
+  // sg1-loader
+  let externals = {
+    namespace: 'sg1',
+    modules: [],
+    exclude: [],
+  };
+
+  // sg1 config
+  let sg1Config = appPackage.sg1Config;
+  if (sg1Config) {
+    if (sg1Config.namespace && Array.isArray(sg1Config.externals)) {
+      console.log('SG1 config detected.\n', JSON.stringify(sg1Config));
+      externals.modules = sg1Config.externals.map(
+        m => new RegExp('^' + m + '$')
       );
+      if (Array.isArray(sg1Config.exclude)) {
+        externals.exclude = sg1Config.exclude.map(
+          m => new RegExp('^' + m + '$')
+        );
+      }
     }
-    sg1Config.externals.modules = sg1Config.externals.modules.map(
-      m => new RegExp(m)
-    );
+
+    // DEPRECATED - nested externals object
+    else if (sg1Config.externals || sg1Config.externals.modules) {
+      sg1Config.isDeprecated = true;
+      externals.modules = sg1Config.externals.modules.map(m => new RegExp(m));
+    }
   }
-  // {
-  //   test: /\.js?$/,
-  //   use: sg1Config.isRoot ? [{
-  //     loader: 'share-loader',
-  //     options: {
-  //       modules: sg1Config.externals.modules,
-  //       exclude: [],
-  //       namespace: sg1Config.externals.namespace
-  //     }
-  //   }] : []
-  // },
 
   const manifest = manifest => {
     const output = {};
@@ -243,8 +234,7 @@ module.exports = function(webpackEnv, appPackage) {
       // initialization, it doesn't blow up the WebpackDevServer client, and
       // changing JS code would still trigger a refresh.
     },
-    externals:
-      sg1Config && sg1Config.externals ? [Externals(sg1Config.externals)] : [],
+    externals: sg1Config ? [Externals(externals)] : [],
     output: {
       library: moduleId,
       libraryTarget: 'umd',

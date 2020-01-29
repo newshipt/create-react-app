@@ -128,6 +128,9 @@ function verifyTypeScriptSetup() {
       parsedValue: ts.JsxEmit.React,
       suggested: 'react',
     },
+    baseUrl: {
+      suggested: 'src',
+    },
     paths: { value: undefined, reason: 'aliased imports are not supported' },
   };
 

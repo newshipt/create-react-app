@@ -1,6 +1,6 @@
 import React from 'react'
-import { render } from 'test-utils'
 import { auth } from '@shipt/sg1'
+import { render } from 'test-utils'
 import { App } from './App'
 
 auth.redirect = jest.fn()

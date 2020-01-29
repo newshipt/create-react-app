@@ -68,33 +68,33 @@ module.exports = function(webpackEnv, appPackage) {
   const isEnvProductionProfile =
     isEnvProduction && process.argv.includes('--profile');
 
-  // sg1 configuration
-  let sg1Config;
-  if (appPackage.sg1Config) {
-    sg1Config = appPackage.sg1Config;
-    if (
-      !appPackage.sg1Config.externals ||
-      !appPackage.sg1Config.externals.namespace ||
-      !appPackage.sg1Config.externals.modules
-    ) {
-      console.error('sg1 config is missing valid externals declaration!');
-      console.error(
-        'Expected the following format:',
-        JSON.stringify(
-          {
-            externals: {
-              namespace: 'string',
-              modules: ['package regex'],
-            },
-          },
-          null,
-          2
-        )
+  // sg1-loader
+  let externals = {
+    namespace: 'sg1',
+    modules: [],
+    exclude: [],
+  };
+
+  // sg1 config
+  let sg1Config = appPackage.sg1Config;
+  if (sg1Config) {
+    console.log('SG1 config detected.\n', JSON.stringify(sg1Config, null, 2));
+
+    // sg1Config.externals => externals.modules
+    if (Array.isArray(sg1Config.externals)) {
+      externals.modules = sg1Config.externals.map(
+        m => new RegExp('^' + m + '$')
       );
+    } else {
+      throw new Error('Missing sg1Config property "externals" of type array.');
     }
-    sg1Config.externals.modules = sg1Config.externals.modules.map(
-      m => new RegExp(m)
-    );
+
+    // sg1Config.exclude => externals.exclude
+    if (Array.isArray(sg1Config.exclude)) {
+      externals.exclude = sg1Config.exclude.map(m => new RegExp('^' + m + '$'));
+    }
+  } else {
+    throw new Error('Missing sg1Config in package.json');
   }
 
   // Webpack uses `publicPath` to determine where the app is being served from.
@@ -408,18 +408,12 @@ module.exports = function(webpackEnv, appPackage) {
         },
         {
           test: /\.js?$/,
-          use: sg1Config.isRoot
-            ? [
-                {
-                  loader: 'sg1-loader',
-                  options: {
-                    modules: sg1Config.externals.modules,
-                    exclude: [],
-                    namespace: sg1Config.externals.namespace,
-                  },
-                },
-              ]
-            : [],
+          use: [
+            {
+              loader: 'sg1-loader',
+              options: externals,
+            },
+          ],
         },
         {
           // "oneOf" will traverse all following loaders until one will

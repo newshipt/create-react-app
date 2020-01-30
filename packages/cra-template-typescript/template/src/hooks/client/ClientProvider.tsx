@@ -5,10 +5,10 @@ import {
   InMemoryCache,
   HttpLink,
   split,
-  getMainDefinition,
 } from '@apollo/client'
+import { getMainDefinition } from '@apollo/client/utilities'
 import { WebSocketLink } from '@apollo/link-ws'
-import { AuthContext, ClientProvider as NovaClientProvider } from '@shipt/nova'
+import { AuthContext } from '@shipt/nova'
 
 export const ClientProvider: React.FC = ({ children }) => {
   const { user } = React.useContext(AuthContext)
@@ -52,9 +52,5 @@ export const ClientProvider: React.FC = ({ children }) => {
     })
   }, [user])
 
-  return (
-    <NovaClientProvider>
-      <ApolloProvider {...{ children, client }} />
-    </NovaClientProvider>
-  )
+  return <ApolloProvider {...{ children, client }} />
 }

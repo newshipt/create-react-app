@@ -7,7 +7,7 @@ import { ClientProvider } from '../../hooks'
 export const App = () => (
   <RootProviders>
     <ClientProvider>
-      <Heading>Hello SG1!</Heading>
+      <Heading size="xlarge">Hello SG1!</Heading>
       <Switch>
         <Route path="/logout" exact={true}>
           <LogoutPage />

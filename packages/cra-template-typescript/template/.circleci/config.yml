@@ -1,0 +1,126 @@
+version: 2.1
+executors:
+  docker-executor:
+    docker:
+      - image: circleci/node:12
+    resource_class: xlarge
+
+orbs:
+  aws-cli: circleci/aws-cli@0.1.17
+
+commands:
+  install-python:
+    steps:
+      - run: sudo apt install python3-pip && sudo pip3 install -r ./scripts/requirements.txt
+  attach-workspace:
+    steps:
+      - attach_workspace:
+          at: ~/
+  persist-workspace:
+    steps:
+      - persist_to_workspace:
+          root: ~/
+          paths: ./
+
+# CircleCI PR-only option must be enabled in the job settings
+dev_only: &dev_only
+  filters:
+    branches:
+      ignore:
+        - main
+        - develop
+        - staging
+
+staging_only: &staging_only
+  context:
+    - frontend
+    - sg1-module
+  deploy_env: 'staging'
+  filters:
+    branches:
+      only: main
+
+jobs:
+  install:
+    executor: docker-executor
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - npm-deps-{{ checksum "package-lock.json" }}
+      - run: npm i
+      - save_cache:
+          key: npm-deps-{{ checksum "package-lock.json" }}
+          paths:
+            - ~/.npm
+            - node_modules
+      - persist-workspace
+  test:
+    executor: docker-executor
+    steps:
+      - attach-workspace
+      - run: npm t
+  build-deploy:
+    executor: docker-executor
+    steps:
+      - attach-workspace
+      - install-python
+      - aws-cli/setup:
+          aws-region: AWS_REGION
+      - add_ssh_keys:
+          fingerprints:
+            - "<---------- ADD FINGERPRINT HERE ---------->"
+      - run:
+          name: Clone/Install SG1 Admin
+          command: |
+            GIT_SSH_COMMAND='ssh -i ~/.ssh/id_rsa'
+            git clone git@github.com:shipt/sg1-admin.git ~/sg1-admin
+            cd ~/sg1-admin
+            npm i
+      - run:
+          name: Setup Review App and Env Vars
+          command: |
+            ./scripts/create_reviewapp.py
+            cat .env.txt >> $BASH_ENV
+            source $BASH_ENV
+            cat $BASH_ENV
+      - run:
+          name: Build SG1 Admin
+          command: |
+            cd ~/sg1-admin
+            cat .env.development
+            REACT_APP_ENV=development npm run build
+      - run:
+          name: Build and Deploy
+          command: |
+            cat .env.txt >> $BASH_ENV
+            source $BASH_ENV
+            cat $BASH_ENV
+            REACT_APP_ENV=development npm run build
+            ./scripts/deploy_app.sh
+      - run:
+          name: Comment on PR
+          command: |
+            cat .env.txt >> $BASH_ENV
+            source $BASH_ENV
+            cat $BASH_ENV
+            ./scripts/comment_on_pr.py $REVIEW_APP_URL
+
+workflows:
+  install_test_deploy:
+    jobs:
+      - install:
+          name: "Install Dependencies"
+          context: sg1-module
+      - test:
+          <<: *dev_only
+          context: sg1-module
+          name: "Run Tests"
+          requires:
+            - "Install Dependencies"
+      - build-deploy:
+          <<: *dev_only
+          context: sg1-module
+          name: "Deploy Review App"
+          requires:
+            - "Run Tests"

@@ -3,8 +3,6 @@ import os
 import boto3
 from utils import get_cloudfront_by_s3_bucket, gen_bucket_policy, create_cname, replace_line_in_file, prepend_sg1_to_url, get_module_name, create_bucket_name, update_okta_app, has_already_commented_on_pr
 
-has_already_commented_on_pr()
-
 s3_client = boto3.resource('s3')
 bucket_name = create_bucket_name()
 review_app_url = 'https://' + bucket_name + '.development.shipt.com'

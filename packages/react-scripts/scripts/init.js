@@ -83,7 +83,7 @@ module.exports = function(
   templateName
 ) {
   const appPackage = require(path.join(appPath, 'package.json'));
-  const useYarn = fs.existsSync(path.join(appPath, 'yarn.lock'));
+  const useYarn = false;
 
   if (!templateName) {
     console.log('');
@@ -130,6 +130,9 @@ module.exports = function(
       build: 'sg1-module-scripts build',
       test: 'sg1-module-scripts test',
       'test:cov': 'npm run test -- --coverage --watchAll=false',
+      'test:e2e': 'cypress open',
+      graphql: 'graphql-codegen --config codegen.yml',
+      prepush: 'npm run build && npm run test:cov',
     },
     templateScripts
   );
@@ -186,6 +189,17 @@ module.exports = function(
         '^react-router-dom$',
         '^styled-components$',
       ],
+    },
+  };
+
+  appPackage['lint-staged'] = {
+    '**/*.{ts,tsx}': ['eslint ./src --ext .ts,.tsx --fix', 'git add'],
+  };
+
+  appPackage.husky = {
+    hooks: {
+      'pre-commit': 'lint-staged',
+      'pre-push': 'npm run prepush',
     },
   };
 

@@ -80,7 +80,7 @@ module.exports = {
   appBuild: resolveApp('build'),
   appPublic: resolveApp('public'),
   appHtml: resolveApp('public/index.html'),
-  appModule: resolveModule(resolveApp, 'src/index'),
+  appModule: resolveModule(resolveApp, 'src/module'),
   appContext: resolveModule(resolveApp, 'src/context'),
   appPackageJson: resolveApp('package.json'),
   appSrc: resolveApp('src'),
@@ -157,6 +157,8 @@ if (
     ownNodeModules: resolveOwn('node_modules'),
     appTypeDeclarations: resolveOwn(`${templatePath}/src/react-app-env.d.ts`),
     ownTypeDeclarations: resolveOwn('lib/react-app.d.ts'),
+    appModule: resolveModule(resolveApp, `${templatePath}/src/module`),
+    appContext: resolveModule(resolveApp, `${templatePath}/src/context`),
   };
 }
 // @remove-on-eject-end

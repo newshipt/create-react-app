@@ -1,5 +1,4 @@
 import { AuthService } from '@okta/okta-react'
-// @ts-ignore
 
 Cypress.Commands.add('login', () => {
   const authService = new AuthService({

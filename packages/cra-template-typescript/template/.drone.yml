@@ -1,0 +1,83 @@
+aws-cli: &aws-cli 046223933678.dkr.ecr.us-east-1.amazonaws.com/aws-cli:v0.4.1
+
+prod-trigger: &prod-trigger
+  when:
+    event:
+      - tag
+    ref:
+      - refs/tags/v*
+
+stage-trigger: &stage-trigger
+  when:
+    event: push
+    branch: main
+
+upload-to-s3: &upload-to-s3
+  image: *aws-cli
+  commands:
+    - export MODULE_NAME="$(cat package.json | jq -r '.name')"
+    - aws s3 cp build s3://$PLUGIN_S3_BUCKET/$MODULE_NAME --recursive --no-progress
+    - sg1-manifest-builder.sh
+
+kind: pipeline
+name: default
+node:
+  env: platform
+
+steps:
+  - name: npm-install
+    image: node
+    commands:
+      - npm install
+
+  - name: npm-test
+    image: node
+    commands:
+      - npm run test:cov
+
+  - name: codecov
+    image: plugins/codecov
+    settings:
+      token:
+        from_secret: codecov_token
+
+  - name: build-staging
+    <<: *stage-trigger
+    image: node
+    commands:
+      - REACT_APP_ENV=staging npm run build
+
+  - name: build-production
+    <<: *prod-trigger
+    image: node
+    commands:
+      - REACT_APP_ENV=production npm run build
+
+  - name: pull-from-ecr
+    image: yspro/drone-plugin-ecr-fetcher
+    volumes:
+      - name: docker-sock
+        path: /var/run/docker.sock
+    settings:
+      images:
+        - *aws-cli
+      aws_region: us-east-1
+
+  - name: deploy-staging
+    <<: *stage-trigger
+    <<: *upload-to-s3
+    environment:
+      AWS_DEFAULT_PROFILE: staging
+      PLUGIN_S3_BUCKET: sg1-modules-staging-shipt-com
+
+  - name: deploy-production
+    <<: *prod-trigger
+    <<: *upload-to-s3
+    environment:
+      AWS_DEFAULT_PROFILE: production
+      PLUGIN_S3_BUCKET: sg1-modules-shipt-com
+
+volumes:
+  - name: docker-sock
+    host:
+      path: /var/run/docker.sock

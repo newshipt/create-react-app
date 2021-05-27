@@ -420,7 +420,7 @@ module.exports = function(webpackEnv, appPackage) {
                     let eslintConfig;
                     try {
                       eslintConfig = eslintCli.getConfigForFile(
-                        paths.appIndexJs
+                        paths.appModule
                       );
                     } catch (e) {
                       console.error(e);

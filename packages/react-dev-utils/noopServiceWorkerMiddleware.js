@@ -9,9 +9,9 @@
 
 const path = require('path');
 
-module.exports = function createNoopServiceWorkerMiddleware(servedPath = '/') {
+module.exports = function createNoopServiceWorkerMiddleware(servedPath) {
   return function noopServiceWorkerMiddleware(req, res, next) {
-    if (req.url === path.join(servedPath, 'service-worker.js')) {
+    if (req.url === path.posix.join(servedPath, 'service-worker.js')) {
       res.setHeader('Content-Type', 'text/javascript');
       res.send(
         `// This service worker file is effectively a 'no-op' that will reset any
